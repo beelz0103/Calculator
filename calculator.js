@@ -1,12 +1,20 @@
 const  display = document.querySelector(".display");
 let calcValue = 0;
+z = 0;
+x = 0;
 
 
 function popDisplay() {
 const getNum = document.querySelectorAll(".numberButtons button")
 Array.from(getNum).forEach(function populateDisplay(val) {
     val.addEventListener("click", () => {
+        if (z == 0) {
+        display.textContent = "";
         display.textContent += val.textContent;
+        z++;
+        }
+        
+        else {display.textContent += val.textContent;}
     })
 });
 }
@@ -23,14 +31,14 @@ function sub(a,b) {
     calcValue = a-b;    
 }
 
-function operate(a,operator, b) {
+function operate(a, operator, b) {
     switch (operator) {
     case 1: add(a,b); break;
     case 2: sub(a,b); break;
     }
 }
 
-let a = [];
+let a = [0,0,0];
 
 let counter = 0;
 const add1 = document.querySelector("#add").addEventListener("click", ()=> {
@@ -55,6 +63,26 @@ const add1 = document.querySelector("#add").addEventListener("click", ()=> {
     }
 )
 
+const equal = document.querySelector("#equal");
+equal.addEventListener("click", () => {
+    if (display.textContent == "") {
+        display,textContent = a[0];
+    }
+
+    else {
+    a[2] = parseInt(display.textContent);
+    console.log(a[2]);
+    operate(a[0],a[1],a[2]);
+    console.log(a[1]);
+    console.log(a[2]);
+    console.log(a[0]);
+
+    display.textContent = calcValue;
+    z--;
+    a = [0,0,0];
+    counter = 0;
+    }
+})
 
 
 

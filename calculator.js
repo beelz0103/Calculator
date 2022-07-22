@@ -1,23 +1,44 @@
 const  display = document.querySelector(".display");
+const  displayCalc = document.querySelector("#displayCalc");
+const  displayAnswer = document.querySelector("#displayAnswer");
+
 let calcValue = 0;
 let displayCounter = 0;
 let opCounter = 0;
 let opVal = [0,0,0];
 let a = opVal;
+let equalCounter = 0;
 
 
 function populateDisplay() {
 const getNum = document.querySelectorAll(".numberButtons button")
 Array.from(getNum).forEach((val) => {
     val.addEventListener("click", () => {
-        if (displayCounter == 0) {
+        if (equalCounter!=0) {
+            clear();
+            display.textContent = "";
+            display.textContent += val.textContent;
+            displayAnswer.textContent = "";
+    
+            displayAnswer.textContent += val.textContent;
+            display.style.color = "Black";
+            displayCounter++;
+        }
+
+        else if (displayCounter == 0) {
         display.textContent = "";
         display.textContent += val.textContent;
+        displayAnswer.textContent = "";
+
+        displayAnswer.textContent += val.textContent;
         display.style.color = "Black";
         displayCounter++;
         }
 
-        else {display.textContent += val.textContent;}
+        else {
+        display.textContent += val.textContent;
+        displayAnswer.textContent += val.textContent;
+        }
     })
 });
 }
@@ -58,34 +79,17 @@ operator.forEach((value) => {
     value.addEventListener("click", calculate)
 })
 
-// function calculate() {
-//     if (opCounter == 0) {
-//         console.log(a);
-//         a[0] = Number(display.textContent);
-//         opCounter++;
-//         display.textContent = `${a[0]}${a[1]}`;
-//     }
-
-//     else {
-//         a[2] = Number(display.textContent);
-//         console.log(a);
-//         operate(a[0],a[1],a[2]);
-//         a[0] = calcValue;
-//         console.log(a);
-//         display.textContent = "";
-//     }
-// }
-
-
-
 function calculate(e) {
 let sign = e.target.textContent;
 console.log(a);    
 
-if (a[1] === 0) {
+if (a[1] === 0 || equalCounter != 0) {
+equalCounter = 0;
 a[1] = sign;
 a[0] = display.textContent;
 display.textContent = "";
+displayCounter--;
+displayCalc.textContent = `${a[0]}${a[1]}`
 console.log(a);
 }
 
@@ -100,48 +104,33 @@ else {
     a[1] = sign; 
     a[0] = calcValue;
     display.textContent = ""; 
+    displayAnswer.textContent = calcValue; 
+    displayCounter--; 
+    displayCalc.textContent = `${a[0]}${a[1]}`
     console.log(a);
 }
 
 }
 
-//     if (counter == 0) {
-//         a[0] = Number(display.textContent);
-//         a[1] = "+";
-//         counter += 1;
-//         console.log(a);
-//         display.textContent = "";
-//         console.log(display);
-//     }
 
-//     else {
-//         a[2] = Number(display.textContent);
-//         console.log(a);
-//         operate(a[0],a[1],a[2]);
-//         a[0] = calcValue;
-//         a[1] = "+";
-//         display.textContent = "";
-//     }
-// }
-
-
-// const clear = document.querySelector("#clear")
-// clear.addEventListener("click", () => {
-//     display.textContent = 0;
-//     displayCounter = 0;
-//     a = ["a",0,0];
-//     counter = 0;
-// })
+function clear() {
+    display.textContent = 0;
+    displayAnswer.textContent = 0;
+    displayCalc.textContent = 0;
+    displayCounter = 0;
+    a = [0,0,0];
+    equalCounter = 0;
+}
 
 const equal = document.querySelector("#equal");
 equal.addEventListener("click", () => {
 display.style.color = "Red";
 
-    if (display.textContent == "") {
-        display.textContent = a[0];
-        displayCounter = 0;
-        a = [0,0,0];
-    }
+    // if (display.textContent == "") {
+    //     display.textContent = a[0];
+    //     displayCounter = 0;
+    //     a = [0,0,0];
+    // }
 
 //     else if (a!="a") {
 //         display.textContent = display.textContent;
@@ -150,14 +139,26 @@ display.style.color = "Red";
 //         counter = 0;
 //     }
 
-    else {
-    a[2] = display.textContent;
-    console.log(a[2]);
+    if (equalCounter == 0) { 
+
+   
+    a[2] = displayAnswer.textContent;
+    displayCalc.textContent = `${a[0]}${a[1]}${a[2]}`
     operate(a[0],a[1],a[2]);
 
     display.textContent = calcValue;
-    displayCounter = 0;
-    a = [0,0,0];
+    displayAnswer.textContent = calcValue;
+    console.log(a);
+    equalCounter++ 
+
+    }
+    
+    else {
+    a[0] = displayAnswer.textContent;
+    displayCalc.textContent = `${a[0]}${a[1]}${a[2]}`
+    operate(a[0],a[1],a[2]);
+    display.textContent = calcValue;
+    displayAnswer.textContent = calcValue;
     }
 
 

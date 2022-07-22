@@ -12,8 +12,7 @@ body {
     display: flex;
 }
 
-.display {
-    flex: 1;
+.display, .display2 {
     height: 100px;
     background-color: lightgray;
     margin: 2px;

@@ -31,10 +31,18 @@ body {
 }
 
 button {
-    height: 75px;
-    width: 75px;
+    height: 50px;
+    width: 50px;
     font-size: 25px;
     font-weight: bold;
+}
+
+#displayAnswer {
+    background-color: aqua;
+}
+
+#displayCalc {
+    background-color:blanchedalmond;
 }
 
 

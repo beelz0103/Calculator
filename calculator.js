@@ -8,6 +8,7 @@ let opCounter = 0;
 let opVal = [0,0,0];
 let a = opVal;
 let equalCounter = 0;
+let signCounter = 0;
 
 
 function populateDisplay() {
@@ -16,28 +17,29 @@ Array.from(getNum).forEach((val) => {
     val.addEventListener("click", () => {
         if (equalCounter!=0) {
             clear();
-            display.textContent = "";
-            display.textContent += val.textContent;
+
             displayAnswer.textContent = "";
     
             displayAnswer.textContent += val.textContent;
             display.style.color = "Black";
             displayCounter++;
+            signCounter = 1;
         }
 
         else if (displayCounter == 0) {
-        display.textContent = "";
-        display.textContent += val.textContent;
+
         displayAnswer.textContent = "";
 
         displayAnswer.textContent += val.textContent;
         display.style.color = "Black";
         displayCounter++;
+        signCounter = 1;
         }
 
         else {
-        display.textContent += val.textContent;
+
         displayAnswer.textContent += val.textContent;
+        signCounter = 1;        
         }
     })
 });
@@ -86,35 +88,35 @@ console.log(a);
 if (a[1] === 0 || equalCounter != 0) {
 equalCounter = 0;
 a[1] = sign;
-a[0] = display.textContent;
-display.textContent = "";
+a[0] = displayAnswer.textContent;
 displayCounter--;
 displayCalc.textContent = `${a[0]}${a[1]}`
 console.log(a);
+signCounter = 0;
 }
 
-else if (display.textContent == "")  {   
+else if (signCounter == 0)  {   
     a[1] = sign;
     console.log(a);
+    displayCalc.textContent = `${a[0]}${a[1]}`
 }
 
 else { 
-    a[2] = display.textContent;         
+    a[2] = displayAnswer.textContent;         
     operate(a[0],a[1],a[2]);
     a[1] = sign; 
     a[0] = calcValue;
-    display.textContent = ""; 
     displayAnswer.textContent = calcValue; 
     displayCounter--; 
     displayCalc.textContent = `${a[0]}${a[1]}`
     console.log(a);
+    signCounter = 0;
 }
 
 }
 
 
 function clear() {
-    display.textContent = 0;
     displayAnswer.textContent = 0;
     displayCalc.textContent = 0;
     displayCounter = 0;
@@ -126,19 +128,6 @@ const equal = document.querySelector("#equal");
 equal.addEventListener("click", () => {
 display.style.color = "Red";
 
-    // if (display.textContent == "") {
-    //     display.textContent = a[0];
-    //     displayCounter = 0;
-    //     a = [0,0,0];
-    // }
-
-//     else if (a!="a") {
-//         display.textContent = display.textContent;
-//         displayCounter = 0;
-//         a = [0,0,0];
-//         counter = 0;
-//     }
-
     if (equalCounter == 0) { 
 
    
@@ -146,7 +135,6 @@ display.style.color = "Red";
     displayCalc.textContent = `${a[0]}${a[1]}${a[2]}`
     operate(a[0],a[1],a[2]);
 
-    display.textContent = calcValue;
     displayAnswer.textContent = calcValue;
     console.log(a);
     equalCounter++ 
@@ -157,9 +145,10 @@ display.style.color = "Red";
     a[0] = displayAnswer.textContent;
     displayCalc.textContent = `${a[0]}${a[1]}${a[2]}`
     operate(a[0],a[1],a[2]);
-    display.textContent = calcValue;
     displayAnswer.textContent = calcValue;
     }
 
 
 })
+
+document.querySelector("#clear").addEventListener("click", clear);

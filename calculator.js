@@ -1,4 +1,4 @@
-const  display = document.querySelector(".display");
+
 const  displayCalc = document.querySelector("#displayCalc");
 const  displayAnswer = document.querySelector("#displayAnswer");
 
@@ -12,7 +12,7 @@ let signCounter = 0;
 
 
 function populateDisplay() {
-const getNum = document.querySelectorAll(".numberButtons button")
+const getNum = document.querySelectorAll(".numberButtons")
 Array.from(getNum).forEach((val) => {
     val.addEventListener("click", () => {
         if (equalCounter!=0) {
@@ -21,7 +21,7 @@ Array.from(getNum).forEach((val) => {
             displayAnswer.textContent = "";
     
             displayAnswer.textContent += val.textContent;
-            display.style.color = "Black";
+
             displayCounter++;
             signCounter = 1;
         }
@@ -31,7 +31,7 @@ Array.from(getNum).forEach((val) => {
         displayAnswer.textContent = "";
 
         displayAnswer.textContent += val.textContent;
-        display.style.color = "Black";
+
         displayCounter++;
         signCounter = 1;
         }
@@ -117,8 +117,8 @@ else {
 
 
 function clear() {
-    displayAnswer.textContent = 0;
-    displayCalc.textContent = 0;
+    displayAnswer.textContent = "";
+    displayCalc.textContent = "";
     displayCounter = 0;
     a = [0,0,0];
     equalCounter = 0;
@@ -126,13 +126,15 @@ function clear() {
 
 const equal = document.querySelector("#equal");
 equal.addEventListener("click", () => {
-display.style.color = "Red";
+
+
+
 
     if (equalCounter == 0) { 
 
    
     a[2] = displayAnswer.textContent;
-    displayCalc.textContent = `${a[0]}${a[1]}${a[2]}`
+    displayCalc.textContent = `${a[0]} ${a[1]} ${a[2]}`
     operate(a[0],a[1],a[2]);
 
     displayAnswer.textContent = calcValue;

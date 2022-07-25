@@ -73,3 +73,13 @@ button {
     background-color: rgba(211, 211, 211, 0.3);
     font-size: 25px;
 }
+
+#clear, #backspace {
+    width: 144px;
+    margin: 2px;
+    background-color: rgba(211, 211, 211, 0.3);
+}
+
+#point {
+    background-color: rgba(211, 211, 211, 0.3); 
+}

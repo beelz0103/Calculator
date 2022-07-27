@@ -1,83 +1,162 @@
-const  displayCalc = document.querySelector("#displayCalc");
-const  displayAnswer = document.querySelector("#displayAnswer");
-const numbers = document.querySelectorAll(".numberButtons");
+const number = document.querySelectorAll(".buttons .numberButtons")
+const displayAnswer = document.querySelector("#displayAnswer");
+const displayCalc = document.querySelector("#displayCalc")
+const operators = document.querySelectorAll(".buttons .operators")
+const equal = document.querySelector("#equal");
+const clearAC = document.querySelector("#clear")
+const point = document.querySelector("#point");
 const erase = document.querySelector("#backspace");
-const operator = document.querySelectorAll(".operators");
 
-let valueHolder = [0,0,0]
-let signCounter = 0;
-let displayCounter = 0;
-let equalCounter = 0;
-let equalCounter2 = 0;
-let eraseCounter = 0;
-let pointCounter = 0;
-populateDisplay();
+let calcValue = null;
+let operand1 = 0;
+let operand2 = null;
+let sign = null;
+let resetDisplay = false;
+let equalCounter = 1;
+let clear = false;
 
-function populateDisplay() {
-numbers.forEach((value)=>{
-    value.addEventListener("click", getNumbers);
+clearAC.addEventListener("click", () => {
+    clear = true;
+    clearAll();
 })
+
+number.forEach((value) => {
+    value.addEventListener("click", getNumbers)
+})
+
+operators.forEach((value) => {
+    value.addEventListener("click", getOperator);
+})
+
+equal.addEventListener("click", getEqual)
+
+erase.addEventListener("click", getEraser)
+
+point.addEventListener("click", getPoint)
+
+function getNumbers(e) {
+    clearAll();
+
+    if((displayAnswer.textContent.slice(0,1) == "0" && displayAnswer.textContent.length == 1) || resetDisplay == true) {
+        displayAnswer.textContent = "";
+        resetDisplay = false;
+    }
+
+    displayAnswer.textContent += e.target.textContent;
 }
 
-function getNumbers(e) {    
-    if(displayAnswer.textContent.slice(0,1) == "0" && displayAnswer.textContent.slice(1,2) != ".") { 
-    console.log("1")   
-    displayAnswer.textContent = "";   
-    eraseCounter = 1;
-    pointCounter = 0;
-    }
-    
-    if (displayCounter == 0) {
-        console.log("2")  
-        console.log(displayCounter);
-        displayAnswer.textContent = "";
-        displayAnswer.textContent += e.target.textContent;   
-        displayCounter = 1;
-        signCounter = 0;
-        eraseCounter = 1;
-        pointCounter = 0;
-        console.log(displayCounter);
-    }     
+function getOperator(e) {
+    clear = false; 
 
-    else if (equalCounter2 == 1) {
-        console.log("3")  
-    clear();
-    if(displayAnswer.textContent.slice(0,1) == "0" && displayAnswer.textContent.slice(1,2) != ".") {    
-        displayAnswer.textContent = "";   
-        eraseCounter = 1;  
-        pointCounter = 0;  
+    if (operand1 == 0 || equalCounter == 0) { 
+        operand1 = displayAnswer.textContent;
+        sign = e.target.textContent;
+        displayCalc.textContent = `${operand1} ${sign}`;
+        resetDisplay = true;
+        equalCounter = 1;
     }
-    displayAnswer.textContent += e.target.textContent;
-    displayCounter = 1;
-    equalCounter2 = 0;
+
+    else if (resetDisplay == true) {
+        sign = e.target.textContent;
+        displayCalc.textContent = `${operand1} ${sign}`;
     }
 
     else {
-        console.log("4")  
-        displayAnswer.textContent += e.target.textContent; 
-        eraseCounter = 1;
-        pointCounter = 0;
+        operand2 = displayAnswer.textContent;
+        operate(operand1, sign, operand2);
+        operand1 = calcValue;
+        displayAnswer.textContent = operand1;
+        sign = e.target.textContent;
+        displayCalc.textContent = `${operand1} ${sign}`;
+        resetDisplay = true;
+    }
+}
+
+function getEqual() {
+    if (sign == null) {
+        displayCalc.textContent = `${displayAnswer.textContent} =`;
+        resetDisplay = true;
+    }
+
+    else if (equalCounter == 1) {
+        operand2 = displayAnswer.textContent;
+        displayCalc.textContent = `${operand1} ${sign} ${operand2} =`;
+        operate(operand1, sign, operand2);
+        displayAnswer.textContent = calcValue;   
+        resetDisplay = true;     
+        clear = true;
+        equalCounter = 0;
+    }
+
+    else {
+        operand1 = displayAnswer.textContent;
+        operate(operand1, sign, operand2);
+        displayAnswer.textContent = calcValue;
+        displayCalc.textContent = `${operand1} ${sign} ${operand2} =`;
+        resetDisplay = true;
+        clear = true;
+    }
+}
+
+function clearAll() {    
+    if (clear) {
+    displayCalc.textContent = "";
+    displayAnswer.textContent = "0";
+    calcValue = null;
+    operand1 = 0;
+    operand2 = null;
+    sign = null;
+    resetDisplay = false;
+    equalCounter = 1;
+    clear = false;  
+    }
+}
+
+function getPoint() {
+    clearAll();
+
+    if(resetDisplay == true) {    
+        displayAnswer.textContent = "";
+        resetDisplay = false;
+    }
+
+    if (displayAnswer.textContent === "") {
+        displayAnswer.textContent = "0"
+    }
+    
+    if (!displayAnswer.textContent.includes('.')) {
+        displayAnswer.textContent += '.'
+    }    
+}
+
+function getEraser() {   
+    let len = displayAnswer.textContent.length;
+
+    if(!resetDisplay) {
+        if (len > 1) {
+        displayAnswer.textContent = displayAnswer.textContent.slice(0,len-1);
+        } 
+
+        else {
+            displayAnswer.textContent = "0";
+        }    
     }
 }
 
 function add(a,b) {    
-    calcValue = `${Number(a)+Number(b)}`;
-    console.log(calcValue);
+    calcValue = `${Number(a)+Number(b)}`;   
 }
 
 function sub(a,b) {    
-    calcValue = `${Number(a)-Number(b)}`;
-    console.log(calcValue);
+    calcValue = `${Number(a)-Number(b)}`; 
 }
 
 function mul(a,b) {
-    calcValue = `${Number(a)*Number(b)}`;
-    console.log(calcValue);
+    calcValue = `${Number(a)*Number(b)}`; 
 }
 
 function div(a,b) {    
     calcValue = `${Number(a)/Number(b)}`;
-    console.log(calcValue);
 }
 
 function operate(a, operator, b) {
@@ -88,131 +167,3 @@ function operate(a, operator, b) {
     case "/": div(a,b); break;
     }
 }
-
-erase.addEventListener("click", () => {
-    if(eraseCounter == 1) {
-    let len = displayAnswer.textContent.length;
-    if (len > 1) {
-    if(displayAnswer.textContent.slice(len-1,len) == ".") {
-        point.disabled = false;
-    }
-    displayAnswer.textContent = displayAnswer.textContent.slice(0,len-1);
-    } 
-
-
-
-    else {
-        displayAnswer.textContent = "0";
-    }
-    } 
-})
-
-operator.forEach((value) => {
-    value.addEventListener("click", calculate)
-})
-
-function calculate(e) {
-    eraseCounter = 0;
-    pointCounter = 1;
-    let sign = e.target.textContent;
-    
-    if (valueHolder[1] == 0 || equalCounter == 0) {    
-    valueHolder[0] = displayAnswer.textContent;
-    valueHolder[1] = sign;
-    displayCalc.textContent = `${valueHolder[0]} ${valueHolder[1]}`;
-    displayCounter = 0;
-    signCounter = 1;
-    equalCounter = 1;
-    point.disabled = false;
-    }
-    
-    else if (signCounter == 1)  {   
-    valueHolder[1] = sign; 
-    displayCalc.textContent = `${valueHolder[0]} ${valueHolder[1]}`
-    }
-    
-    else { 
-        valueHolder[2] = displayAnswer.textContent;     
-        console.log(valueHolder);    
-        operate(valueHolder[0], valueHolder[1], valueHolder[2]);
-        valueHolder[1] = sign; 
-        valueHolder[0] = calcValue;
-        displayAnswer.textContent = calcValue;       
-        displayCalc.textContent = `${valueHolder[0]} ${valueHolder[1]}`;
-        displayCounter = 0;
-        signCounter = 1;
-        point.disabled = false;
-    }    
-}
-
-const point = document.querySelector("#point");
-
-point.addEventListener("click", () => {
-    if (pointCounter == 1) {   
-    console.log("1");     
-    displayAnswer.textContent = "0.";
-    equalCounter2 = 0;
-    point.disabled = true;
-    pointCounter = 0;
-    eraseCounter = 1;
-    displayCounter = 1;
-    console.log(1);
-    console.log(eraseCounter);
-    }
-
-    else { 
-    displayAnswer.textContent += ".",
-    point.disabled = true;
-    pointCounter = 0;
-    displayCounter = 1;
-    }
-})
-
-function clear() {
-    displayAnswer.textContent = "0";
-    displayCalc.textContent = "";
-    valueHolder = [0,0,0]
-    signCounter = 0;
-    displayCounter = 0; 
-    equalCounter = 0;
-    eraseCounter = 0;
-    pointCounter = 0;
-    point.disabled = false;
-}
-
-const clearAC = document.querySelector("#clear")
-
-clearAC.addEventListener("click", clear);
-
-const equal = document.querySelector("#equal");
-
-equal.addEventListener("click", () => {
-    eraseCounter = 0;
-    pointCounter = 1;
-    if (valueHolder[1] == 0) {
-        valueHolder[0] = displayAnswer.textContent;
-        valueHolder[0] = Number(valueHolder[0]);   
-        valueHolder[0] = valueHolder[0].toString();                 
-        displayCalc.textContent = `${valueHolder[0]} =`
-        displayAnswer.textContent = `${valueHolder[0]}`
-        displayCounter = 0;
-        point.disabled = false;
-    }
-
-    else if (equalCounter == 1) {    
-    valueHolder[2] = displayAnswer.textContent;
-    displayCalc.textContent = `${valueHolder[0]} ${valueHolder[1]} ${valueHolder[2]} = `
-    operate(valueHolder[0], valueHolder[1], valueHolder[2]);
-    displayAnswer.textContent = calcValue;
-    point.disabled = false;
-    equalCounter = 0;
-    equalCounter2 = 1;
-    }
-
-    else {
-    valueHolder[0] = displayAnswer.textContent;
-    displayCalc.textContent = `${valueHolder[0]} ${valueHolder[1]} ${valueHolder[2]} = `
-    operate(valueHolder[0], valueHolder[1], valueHolder[2]);
-    displayAnswer.textContent = calcValue;
-    }
-})
